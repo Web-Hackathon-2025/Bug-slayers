@@ -1,0 +1,68 @@
+@model CreateServiceRequestViewModel
+@{
+    ViewData["Title"] = "Create Service Request";
+}
+
+<h2>Create Service Request</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="CreateRequest" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="mb-3">
+                <label class="form-label">Service Provider</label>
+                <input type="text" class="form-control" value="@ViewBag.ServiceProviderName" readonly />
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Service</label>
+                <input type="text" class="form-control" value="@ViewBag.ServiceName" readonly />
+            </div>
+            
+            <input type="hidden" asp-for="ServiceProviderId" />
+            <input type="hidden" asp-for="ServiceId" />
+            
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="Address" class="form-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="City" class="form-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="RequestedDate" class="form-label"></label>
+                <input asp-for="RequestedDate" type="datetime-local" class="form-control" />
+                <span asp-validation-for="RequestedDate" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Submit Request</button>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

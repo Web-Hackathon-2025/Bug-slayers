@@ -1,0 +1,66 @@
+@model List<ServiceRequest>
+@using Karigar.Models
+@{
+    ViewData["Title"] = "Booking History";
+}
+
+<h2>Booking History</h2>
+<hr />
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Service</th>
+                    <th>Scheduled Date</th>
+                    <th>Status</th>
+                    <th>Review</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model)
+                {
+                    <tr>
+                        <td>@request.Customer.FullName</td>
+                        <td>@request.Service.Name</td>
+                        <td>@(request.ScheduledDate?.ToString("MMM dd, yyyy") ?? "Not scheduled")</td>
+                        <td>
+                            <span class="badge bg-@(request.Status == RequestStatus.Completed ? "success" : "info")">
+                                @request.Status
+                            </span>
+                        </td>
+                        <td>
+                            @if (request.Review != null)
+                            {
+                                <div>
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <span class="text-warning">@(i <= request.Review.Rating ? "★" : "☆")</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(request.Review.Comment))
+                                    {
+                                        <p class="mb-0"><small>@request.Review.Comment</small></p>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No review yet</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <p>No booking history found.</p>
+    </div>
+}
+

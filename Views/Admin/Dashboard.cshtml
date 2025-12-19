@@ -1,0 +1,86 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2>Admin Dashboard</h2>
+<hr />
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Users</h5>
+                <h3>@ViewBag.TotalUsers</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Customers</h5>
+                <h3>@ViewBag.TotalCustomers</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Service Providers</h5>
+                <h3>@ViewBag.TotalServiceProviders</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Pending Approvals</h5>
+                <h3>@ViewBag.PendingApprovals</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Requests</h5>
+                <h3>@ViewBag.TotalRequests</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Active Requests</h5>
+                <h3>@ViewBag.ActiveRequests</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Reviews</h5>
+                <h3>@ViewBag.TotalReviews</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a asp-action="ManageUsers" class="btn btn-primary me-2">Manage Users</a>
+                <a asp-action="ManageServiceProviders" class="btn btn-primary me-2">Manage Service Providers</a>
+                <a asp-action="MonitorListings" class="btn btn-primary me-2">Monitor Listings</a>
+                <a asp-action="ModerateReviews" class="btn btn-primary me-2">Moderate Reviews</a>
+                <a asp-action="ViewMetrics" class="btn btn-primary">View Metrics</a>
+            </div>
+        </div>
+    </div>
+</div>
+

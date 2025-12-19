@@ -1,0 +1,61 @@
+@model List<Service>
+@{
+    ViewData["Title"] = "Manage Services";
+}
+
+<h2>Manage Services</h2>
+<hr />
+
+<div class="mb-3">
+    <a asp-action="AddService" class="btn btn-primary">Add New Service</a>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Service Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var service in Model)
+                {
+                    <tr>
+                        <td>@service.Name</td>
+                        <td>@service.Description</td>
+                        <td>₹@service.Price @service.Unit</td>
+                        <td>
+                            <span class="badge bg-@(service.IsActive ? "success" : "secondary")">
+                                @(service.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </td>
+                        <td>
+                            <a asp-action="EditService" asp-route-id="@service.Id" class="btn btn-sm btn-primary">Edit</a>
+                            @if (service.IsActive)
+                            {
+                                <form asp-action="DeleteService" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@service.Id" />
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to deactivate this service?')">Deactivate</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <p>You haven't added any services yet.</p>
+        <a asp-action="AddService" class="btn btn-primary">Add Your First Service</a>
+    </div>
+}
+

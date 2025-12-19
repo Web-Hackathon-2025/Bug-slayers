@@ -1,0 +1,80 @@
+@model List<ServiceProviderViewModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center mb-4">
+    <h1 class="display-4">Welcome to Karigar</h1>
+    <p class="lead">Find trusted local service providers near you</p>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <form asp-action="Index" method="get" class="card p-3">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control" placeholder="Search services..." value="@ViewContext.HttpContext.Request.Query["search"]" />
+                </div>
+                <div class="col-md-3">
+                    <select name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        @foreach (var category in ViewBag.Categories as List<string> ?? new List<string>())
+                        {
+                            <option value="@category" selected="@(ViewContext.HttpContext.Request.Query["category"] == category)">@category</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="city" class="form-select">
+                        <option value="">All Cities</option>
+                        @foreach (var city in ViewBag.Cities as List<string> ?? new List<string>())
+                        {
+                            <option value="@city" selected="@(ViewContext.HttpContext.Request.Query["city"] == city)">@city</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var provider in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@provider.BusinessName</h5>
+                        <p class="text-muted">@provider.Category</p>
+                        <p class="card-text">@(provider.Description?.Length > 100 ? provider.Description.Substring(0, 100) + "..." : provider.Description)</p>
+                        <p class="text-muted"><small>📍 @provider.City</small></p>
+                        <div class="mb-2">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <span class="text-warning">@(i <= Math.Round(provider.AverageRating) ? "★" : "☆")</span>
+                            }
+                            <span class="text-muted">(@provider.TotalReviews reviews)</span>
+                        </div>
+                        <p class="text-muted"><small>Services: @provider.Services.Count</small></p>
+                        <a asp-action="ProviderDetails" asp-route-id="@provider.Id" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h4>No service providers found</h4>
+                <p>Try adjusting your search criteria or check back later.</p>
+            </div>
+        </div>
+    }
+</div>
+
