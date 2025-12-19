@@ -1,0 +1,67 @@
+@model List<Review>
+@using Karigar.Models
+@{
+    ViewData["Title"] = "Moderate Reviews";
+}
+
+<h2>Moderate Reviews</h2>
+<hr />
+
+<form asp-action="ModerateReviews" method="get" class="mb-3">
+    <div class="row g-3">
+        <div class="col-md-10">
+            <input type="text" name="search" class="form-control" placeholder="Search by provider, customer, or comment..." value="@ViewContext.HttpContext.Request.Query["search"]" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </div>
+</form>
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Service Provider</th>
+                    <th>Customer</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var review in Model)
+                {
+                    <tr>
+                        <td>@review.ServiceProvider.BusinessName</td>
+                        <td>@review.Customer.FullName</td>
+                        <td>
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <span class="text-warning">@(i <= review.Rating ? "★" : "☆")</span>
+                            }
+                        </td>
+                        <td>@(review.Comment?.Length > 100 ? review.Comment.Substring(0, 100) + "..." : review.Comment)</td>
+                        <td>@review.CreatedAt.ToString("MMM dd, yyyy")</td>
+                        <td>
+                            <form asp-action="DeleteReview" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@review.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this review?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <p>No reviews found.</p>
+    </div>
+}
+

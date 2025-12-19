@@ -1,0 +1,121 @@
+@model List<ServiceRequest>
+@using Karigar.Models
+@{
+    ViewData["Title"] = "Manage Service Requests";
+}
+
+<h2>Manage Service Requests</h2>
+<hr />
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Service</th>
+                    <th>Description</th>
+                    <th>Requested Date</th>
+                    <th>Scheduled Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model)
+                {
+                    <tr>
+                        <td>@request.Customer.FullName</td>
+                        <td>@request.Service.Name</td>
+                        <td>@(request.Description.Length > 50 ? request.Description.Substring(0, 50) + "..." : request.Description)</td>
+                        <td>@request.RequestedDate.ToString("MMM dd, yyyy")</td>
+                        <td>@(request.ScheduledDate?.ToString("MMM dd, yyyy") ?? "Not scheduled")</td>
+                        <td>
+                            <span class="badge bg-@(request.Status == RequestStatus.Completed ? "success" : 
+                                request.Status == RequestStatus.Confirmed ? "info" : 
+                                request.Status == RequestStatus.Cancelled || request.Status == RequestStatus.Rejected ? "danger" : "warning")">
+                                @request.Status
+                            </span>
+                        </td>
+                        <td>
+                            @if (request.Status == RequestStatus.Requested)
+                            {
+                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#acceptModal@request.Id">Accept</button>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal@request.Id">Reject</button>
+                                
+                                <div class="modal fade" id="acceptModal@request.Id" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Accept Request</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <form asp-action="AcceptRequest" method="post">
+                                                <input type="hidden" name="id" value="@request.Id" />
+                                                <div class="modal-body">
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label">Scheduled Date</label>
+                                                        <input type="datetime-local" name="scheduledDate" class="form-control" value="@request.RequestedDate.ToString("yyyy-MM-ddTHH:mm")" />
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-success">Accept Request</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="modal fade" id="rejectModal@request.Id" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Reject Request</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <form asp-action="RejectRequest" method="post">
+                                                <input type="hidden" name="id" value="@request.Id" />
+                                                <div class="modal-body">
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label">Reason (Optional)</label>
+                                                        <textarea name="reason" class="form-control" rows="3"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-danger">Reject Request</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (request.Status == RequestStatus.Confirmed || request.Status == RequestStatus.InProgress)
+                            {
+                                <form asp-action="UpdateRequestStatus" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@request.Id" />
+                                    <input type="hidden" name="status" value="@RequestStatus.InProgress" />
+                                    <button type="submit" class="btn btn-sm btn-info">Mark In Progress</button>
+                                </form>
+                                <form asp-action="UpdateRequestStatus" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@request.Id" />
+                                    <input type="hidden" name="status" value="@RequestStatus.Completed" />
+                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Mark this request as completed?')">Mark Completed</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <p>No service requests found.</p>
+    </div>
+}
+

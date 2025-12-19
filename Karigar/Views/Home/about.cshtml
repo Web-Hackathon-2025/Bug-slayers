@@ -1,0 +1,230 @@
+﻿@{
+    ViewData["Title"] = "About Us";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"]</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+
+        .hero-about {
+            padding: 100px 20px;
+            background: linear-gradient(rgba(10,37,64,0.7), rgba(10,37,64,0.7)), url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1600&q=90') no-repeat center center;
+            background-size: cover;
+            color: #fff;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 50px;
+        }
+
+            .hero-about h1 {
+                font-size: 3rem;
+                font-weight: 700;
+                margin-bottom: 20px;
+            }
+
+            .hero-about p {
+                font-size: 1.2rem;
+            }
+
+        .section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .team-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+            .team-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .team-card img {
+                width: 100%;
+                height: 250px;
+                object-fit: cover;
+            }
+
+        .team-card-body {
+            padding: 20px;
+        }
+
+        .team-card h5 {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .team-card p {
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        .mission-card {
+            background: #0d6efd;
+            color: #fff;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+            .mission-card h4 {
+                font-weight: 700;
+                margin-bottom: 15px;
+            }
+
+            .mission-card p {
+                font-size: 1rem;
+            }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand" asp-action="Index">Karigar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" asp-action="About">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="Contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-light ms-3" asp-action="Login">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- Hero Section -->
+        <div class="hero-about">
+            <h1>About Karigar</h1>
+            <p>Connecting you with trusted local service providers in your neighborhood. Our mission is to make professional services accessible to everyone with ease and reliability.</p>
+        </div>
+
+        <!-- Mission & Vision Section -->
+        <div class="section">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="mission-card">
+                        <h4>Our Mission</h4>
+                        <p>To bridge the gap between skilled professionals and customers, ensuring quality, trust, and convenience in every service.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mission-card">
+                        <h4>Our Vision</h4>
+                        <p>To become the most trusted platform for local services, empowering professionals and simplifying life for customers worldwide.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="section">
+            <h2 class="section-title">Meet Our Team</h2>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="team-card">
+                        <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&q=90" alt="Team Member">
+                        <div class="team-card-body">
+                            <h5>Ali Khan</h5>
+                            <p>Co-Founder & CEO</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="team-card">
+                        <img src="https://images.unsplash.com/photo-1603415526960-f8f1b6d0c0e2?auto=format&fit=crop&w=800&q=90" alt="Team Member">
+                        <div class="team-card-body">
+                            <h5>Sarah Ahmed</h5>
+                            <p>Head of Operations</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="team-card">
+                        <img src="https://images.unsplash.com/photo-1595152772835-219674b2a8a4?auto=format&fit=crop&w=800&q=90" alt="Team Member">
+                        <div class="team-card-body">
+                            <h5>Omar Farooq</h5>
+                            <p>Lead Developer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why Choose Us Section -->
+        <div class="section">
+            <h2 class="section-title">Why Choose Karigar?</h2>
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="p-4 bg-white shadow rounded">
+                        <h5>Trusted Professionals</h5>
+                        <p>Every service provider is verified to ensure reliability and quality of work.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-white shadow rounded">
+                        <h5>Easy Booking</h5>
+                        <p>Book services online with just a few clicks and get instant confirmations.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-white shadow rounded">
+                        <h5>Transparent Pricing</h5>
+                        <p>All services come with upfront pricing to ensure no hidden charges.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+@model List<Karigar.Models.ServiceProvider>
+@using Karigar.Models
+@{
+    ViewData["Title"] = "Monitor Listings";
+}
+
+<h2>Monitor Listings</h2>
+<hr />
+
+<form asp-action="MonitorListings" method="get" class="mb-3">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <select name="category" class="form-select">
+                <option value="">All Categories</option>
+                @foreach (var category in ViewBag.Categories as List<string> ?? new List<string>())
+                {
+                    <option value="@category" selected="@(ViewContext.HttpContext.Request.Query["category"] == category)">@category</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6">
+            <input type="text" name="search" class="form-control" placeholder="Search..." value="@ViewContext.HttpContext.Request.Query["search"]" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </div>
+</form>
+
+@if (Model != null && Model.Any())
+{
+    <div class="row">
+        @foreach (var provider in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@provider.BusinessName</h5>
+                        <p class="text-muted">@provider.Category</p>
+                        <p class="card-text">@(provider.Description?.Length > 100 ? provider.Description.Substring(0, 100) + "..." : provider.Description)</p>
+                        <p class="text-muted"><small>📍 @provider.User.City</small></p>
+                        <div class="mb-2">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <span class="text-warning">@(i <= Math.Round(provider.AverageRating) ? "★" : "☆")</span>
+                            }
+                            <span class="text-muted">(@provider.TotalReviews reviews)</span>
+                        </div>
+                        <p class="text-muted"><small>Services: @provider.Services.Count</small></p>
+                        <p class="text-muted"><small>Total Requests: @provider.ServiceRequests.Count</small></p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <p>No listings found.</p>
+    </div>
+}
+

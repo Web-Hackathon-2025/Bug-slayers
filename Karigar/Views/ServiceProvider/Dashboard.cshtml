@@ -1,0 +1,151 @@
+@model Karigar.Models.ServiceProvider
+@using Karigar.Models
+@{
+    ViewData["Title"] = "Service Provider Dashboard";
+    var pendingRequests = ViewBag.PendingRequests as List<ServiceRequest> ?? new List<ServiceRequest>();
+    var confirmedRequests = ViewBag.ConfirmedRequests as List<ServiceRequest> ?? new List<ServiceRequest>();
+}
+
+<h2>Dashboard</h2>
+<hr />
+
+@if (!Model.IsApproved)
+{
+    <div class="alert alert-warning">
+        <strong>Pending Approval:</strong> Your profile is waiting for admin approval. You'll be able to receive requests once approved.
+    </div>
+}
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Services</h5>
+                <h3>@Model.Services.Count</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Requests</h5>
+                <h3>@Model.ServiceRequests.Count</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Average Rating</h5>
+                <h3>@Model.AverageRating.ToString("F1")</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Reviews</h5>
+                <h3>@Model.TotalReviews</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Pending Requests</h5>
+            </div>
+            <div class="card-body">
+                @if (pendingRequests.Any())
+                {
+                    <div class="list-group">
+                        @foreach (var request in pendingRequests.Take(5))
+                        {
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1">@request.Service.Name</h6>
+                                        <p class="mb-1">@request.Customer.FullName</p>
+                                        <small>@request.RequestedDate.ToString("MMM dd, yyyy")</small>
+                                    </div>
+                                    <div>
+                                        <a asp-action="ManageRequests" class="btn btn-sm btn-primary">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    @if (pendingRequests.Count > 5)
+                    {
+                        <div class="mt-3">
+                            <a asp-action="ManageRequests" class="btn btn-sm btn-outline-primary">View All (@pendingRequests.Count)</a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No pending requests.</p>
+                }
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Upcoming Confirmed Requests</h5>
+            </div>
+            <div class="card-body">
+                @if (confirmedRequests.Any())
+                {
+                    <div class="list-group">
+                        @foreach (var request in confirmedRequests.Take(5))
+                        {
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1">@request.Service.Name</h6>
+                                        <p class="mb-1">@request.Customer.FullName</p>
+                                        <small>@(request.ScheduledDate?.ToString("MMM dd, yyyy") ?? "Not scheduled")</small>
+                                    </div>
+                                    <div>
+                                        <a asp-action="ManageRequests" class="btn btn-sm btn-primary">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    @if (confirmedRequests.Count > 5)
+                    {
+                        <div class="mt-3">
+                            <a asp-action="ManageRequests" class="btn btn-sm btn-outline-primary">View All (@confirmedRequests.Count)</a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No confirmed requests.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a asp-action="EditProfile" class="btn btn-primary me-2">Edit Profile</a>
+                <a asp-action="ManageServices" class="btn btn-primary me-2">Manage Services</a>
+                <a asp-action="ManageRequests" class="btn btn-primary me-2">Manage Requests</a>
+                <a asp-action="BookingHistory" class="btn btn-primary">Booking History</a>
+            </div>
+        </div>
+    </div>
+</div>
+

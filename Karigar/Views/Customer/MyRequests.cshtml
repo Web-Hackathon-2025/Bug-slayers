@@ -1,0 +1,91 @@
+@model List<ServiceRequestViewModel>
+@using Karigar.Models
+@{
+    ViewData["Title"] = "My Service Requests";
+}
+
+<h2>My Service Requests</h2>
+<hr />
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Service Provider</th>
+                    <th>Service</th>
+                    <th>Description</th>
+                    <th>Requested Date</th>
+                    <th>Scheduled Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model)
+                {
+                    <tr>
+                        <td>@request.ServiceProviderName</td>
+                        <td>@request.ServiceName</td>
+                        <td>@(request.Description.Length > 50 ? request.Description.Substring(0, 50) + "..." : request.Description)</td>
+                        <td>@request.RequestedDate.ToString("MMM dd, yyyy")</td>
+                        <td>@(request.ScheduledDate?.ToString("MMM dd, yyyy") ?? "Not scheduled")</td>
+                        <td>
+                            <span class="badge bg-@(request.Status == RequestStatus.Completed ? "success" : 
+                                request.Status == RequestStatus.Confirmed ? "info" : 
+                                request.Status == RequestStatus.Cancelled || request.Status == RequestStatus.Rejected ? "danger" : "warning")">
+                                @request.StatusDisplay
+                            </span>
+                        </td>
+                        <td>
+                            @if (request.CanReview)
+                            {
+                                <a asp-controller="Review" asp-action="Create" asp-route-requestId="@request.Id" class="btn btn-sm btn-success">Review</a>
+                            }
+                            @if (request.HasReview)
+                            {
+                                <span class="text-muted">Reviewed</span>
+                            }
+                            @if (request.Status == RequestStatus.Requested || request.Status == RequestStatus.Confirmed)
+                            {
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal@request.Id">Cancel</button>
+                                
+                                <div class="modal fade" id="cancelModal@request.Id" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Cancel Request</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <form asp-action="CancelRequest" method="post">
+                                                <input type="hidden" name="id" value="@request.Id" />
+                                                <div class="modal-body">
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label">Reason (Optional)</label>
+                                                        <textarea name="reason" class="form-control" rows="3"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-danger">Cancel Request</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <p>You haven't made any service requests yet.</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Browse Service Providers</a>
+    </div>
+}

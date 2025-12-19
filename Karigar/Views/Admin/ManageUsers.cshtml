@@ -1,0 +1,92 @@
+@model List<object>
+@using Karigar.Models
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<h2>Manage Users</h2>
+<hr />
+
+<form asp-action="ManageUsers" method="get" class="mb-3">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <select name="role" class="form-select">
+                <option value="">All Roles</option>
+                @foreach (var role in ViewBag.Roles as List<string> ?? new List<string>())
+                {
+                    <option value="@role" selected="@(ViewContext.HttpContext.Request.Query["role"] == role)">@role</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6">
+            <input type="text" name="search" class="form-control" placeholder="Search by name or email..." value="@ViewContext.HttpContext.Request.Query["search"]" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </div>
+</form>
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th>City</th>
+                    <th>Is Service Provider</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (dynamic item in Model)
+                {
+                    var user = item.User as ApplicationUser;
+                    var roles = item.Roles as IList<string>;
+                    var isServiceProvider = item.IsServiceProvider as bool? ?? false;
+                    var isLocked = user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.UtcNow;
+                    
+                    <tr>
+                        <td>@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td>@string.Join(", ", roles)</td>
+                        <td>@user.City</td>
+                        <td>@(isServiceProvider ? "Yes" : "No")</td>
+                        <td>
+                            <span class="badge bg-@(isLocked ? "danger" : "success")">
+                                @(isLocked ? "Suspended" : "Active")
+                            </span>
+                        </td>
+                        <td>
+                            @if (isLocked)
+                            {
+                                <form asp-action="ActivateUser" method="post" class="d-inline">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button type="submit" class="btn btn-sm btn-success">Activate</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-action="SuspendUser" method="post" class="d-inline">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to suspend this user?')">Suspend</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <p>No users found.</p>
+    </div>
+}
+
